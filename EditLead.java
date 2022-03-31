@@ -1,89 +1,107 @@
-package Week2.Day1Assignment;
+package Week2.Day2Assignment;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.Select;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class EditLead {
-	public static void main(String[] args) {
-
-		// Set the system property
+	public static void main(String[] args) throws InterruptedException {
+		// WebDriver setup
 		WebDriverManager.chromedriver().setup();
 
-		// Driver intialisation
+		// Launch the browser
 		WebDriver driver = new ChromeDriver();
 
 		// Launch the url
 		driver.get("http://leaftaps.com/opentaps/control/login");
+		System.out.println("The url launched");
 
-		// Enter username
+		// Enter UserName and Password Using Id Locator
 		driver.findElement(By.id("username")).sendKeys("Democsr");
+		System.out.println("Username entered successfully");
 
-		// Enter password
 		driver.findElement(By.id("password")).sendKeys("crmsfa");
+		System.out.println("password entered successfully");
 
-		// Click on login using class locator
+		// Click on Login Button using Class Locator
 		driver.findElement(By.className("decorativeSubmit")).click();
+		System.out.println("Logged in successfully");
 
-		// Click on crmsfa link
+		// Click on CRM/SFA Link
 		driver.findElement(By.linkText("CRM/SFA")).click();
+		System.out.println("CRM/SFA link clicked successfully");
 
-		// CLick on leads button
-		driver.findElement(By.linkText("Leads")).click();
+		// Click Leads link
+		driver.findElement(By.xpath("//a[text()='Leads']")).click();
+		System.out.println("Leads link is clicked successfully");
 
-		// Click on create lead
-		driver.findElement(By.linkText("Create Lead")).click();
+		// Click Find leads
+		driver.findElement(By.xpath("//a[text()='Find Leads']")).click();
+		System.out.println("Find leads link is clicked successfully");
 
-		// Enter company name field using id locator
-		driver.findElement(By.id("createLeadForm_companyName")).sendKeys("Mphasis");
+		// Enter first name
+		driver.findElement(By.xpath("//div[@class='x-form-item x-tab-item']//input[@name='firstName']"))
+				.sendKeys("Sangavi");
+		System.out.println("Firstname entered successfully");
 
-		// Enter firstname using Id locator
-		driver.findElement(By.id("createLeadForm_firstName")).sendKeys("Annamalai");
+		// Click on find leads link
+		driver.findElement(By.xpath("//button[text()='Find Leads']")).click();
+		System.out.println("Findleads link is clicked successfully");
 
-		// Enter lastname using id locator
-		driver.findElement(By.id("createLeadForm_lastName")).sendKeys("Narayanan");
+		// Click on first resulting lead
+		Thread.sleep(10000);
+		WebElement ResultingLead = driver
+				.findElement(By.xpath("(//div[@class='x-grid3-cell-inner x-grid3-col-partyId']/a)[1]"));
+		String LeadId = ResultingLead.getText();
+		System.out.println("The lead id is " + LeadId);
+		ResultingLead.click();
 
-		// Enter firstname(local) using id locator
-		driver.findElement(By.id("createLeadForm_firstNameLocal")).sendKeys("LocalName");
-
-		// Enter department field
-		driver.findElement(By.id("createLeadForm_departmentName")).sendKeys("QA");
-
-		// Enter description field
-		driver.findElement(By.id("createLeadForm_description")).sendKeys("I am software tester");
-
-		// Enter email address
-		driver.findElement(By.id("createLeadForm_primaryEmail")).sendKeys("Annamalai.sagunthala1994@gmail.com");
-
-		// Select State/Province as NewYork Using Visible Text
-		WebElement Stateprovince = driver.findElement(By.id("createLeadForm_generalStateProvinceGeoId"));
-
-		// Select class
-		Select dd = new Select(Stateprovince);
-		dd.selectByVisibleText("New York");
-
-		// Click on create button
-		driver.findElement(By.className("smallSubmit")).click();
-
-		// click on edit button
-		driver.findElement(By.linkText("Edit")).click();
-
-		// CLear the description
-		driver.findElement(By.id("updateLeadForm_description")).clear();
-
-		// Fill important note
-		driver.findElement(By.id("updateLeadForm_importantNote")).sendKeys("Test");
-
-		// Click on update button
-		driver.findElement(By.className("smallSubmit")).click();
-
-		// Get the current url
+		// Verify title of the page
+		String CurrentTitle = "View Lead | opentaps CRM";
 		String Title = driver.getTitle();
 		System.out.println(Title);
 
+		if (CurrentTitle.equals(Title)) {
+			System.out.println("The title is matching");
+		} else {
+			System.out.println("The title is not matching");
+		}
+
+		// Click edit
+		driver.findElement(By.xpath("//a[text()='Edit']")).click();
+		System.out.println("Edit button is clicked");
+
+		// Change the company name
+		WebElement CompanyName = driver.findElement(By.xpath("//input[@id='updateLeadForm_companyName']"));
+		CompanyName.clear();
+		System.out.println("THe company name is cleared");
+		
+		String ComName="Mphasis";
+		CompanyName.sendKeys(ComName);
+		System.out.println("The company name changed");
+		
+		//Click Update
+		driver.findElement(By.xpath("//input[@Value='Update']")).click();
+		System.out.println("Update button is clicked");
+		
+		//Confirm the changed name appears
+		WebElement ChangedCompanyName = driver.findElement(By.xpath("//span[@id='viewLead_companyName_sp']"));
+		String NewChangedCom=ChangedCompanyName.getText();
+		System.out.println(NewChangedCom);
+		
+		if(ComName.equals(NewChangedCom))
+		{
+			System.out.println("THe company name changed is matching");
+		}
+		else
+		{
+			System.out.println("The company name changed is not matching");
+		}
+		
+		//close the browser
+		driver.close();
 	}
 }

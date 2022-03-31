@@ -1,99 +1,103 @@
-package Week2.Day1Assignment;
+package Week2.Day2Assignment;
 
+import org.checkerframework.checker.units.qual.Current;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.Select;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class DuplicateLead {
-	public static void main(String[] args) {
-
-		// Set the system property
+	public static void main(String[] args) throws InterruptedException {
+		// WebDriver setup
 		WebDriverManager.chromedriver().setup();
 
-		// Driver intialisation
+		// Launch the browser
 		WebDriver driver = new ChromeDriver();
 
 		// Launch the url
 		driver.get("http://leaftaps.com/opentaps/control/login");
+		System.out.println("The url launched");
 
-		// Enter username
+		// Enter UserName and Password Using Id Locator
 		driver.findElement(By.id("username")).sendKeys("Democsr");
+		System.out.println("Username entered successfully");
 
-		// Enter password
 		driver.findElement(By.id("password")).sendKeys("crmsfa");
+		System.out.println("password entered successfully");
 
-		// Click on login using class locator
+		// Click on Login Button using Class Locator
 		driver.findElement(By.className("decorativeSubmit")).click();
+		System.out.println("Logged in successfully");
 
-		// Click on crmsfa link
+		// Click on CRM/SFA Link
 		driver.findElement(By.linkText("CRM/SFA")).click();
+		System.out.println("CRM/SFA link clicked successfully");
 
-		// CLick on leads button
-		driver.findElement(By.linkText("Leads")).click();
+		// Click Leads link
+		driver.findElement(By.xpath("//a[text()='Leads']")).click();
+		System.out.println("Leads link is clicked successfully");
 
-		// Click on create lead
-		driver.findElement(By.linkText("Create Lead")).click();
+		// Click Find leads
+		driver.findElement(By.xpath("//a[text()='Find Leads']")).click();
+		System.out.println("Find leads link is clicked successfully");
 
-		// Enter company name field using id locator
-		driver.findElement(By.id("createLeadForm_companyName")).sendKeys("Mphasis");
+		// CLick on email
+		driver.findElement(By.xpath("//span[text()='Email']")).click();
+		System.out.println("Email link is clicked successfully");
 
-		// Enter firstname using Id locator
-		driver.findElement(By.id("createLeadForm_firstName")).sendKeys("Annamalai");
+		// Enter email
+		driver.findElement(By.xpath("//input[@name='emailAddress']")).sendKeys("aaa@av.com");
+		System.out.println("Email entered successfully");
 
-		// Enter lastname using id locator
-		driver.findElement(By.id("createLeadForm_lastName")).sendKeys("Narayanan");
+		// Click find leads button
+		driver.findElement(By.xpath("//button[text()='Find Leads']")).click();
+		System.out.println("Find leads button clicked");
+		Thread.sleep(3000);
 
-		// Enter firstname(local) using id locator
-		driver.findElement(By.id("createLeadForm_firstNameLocal")).sendKeys("LocalName");
+		// Capture name of First Resulting lead
+		WebElement Fname = driver
+				.findElement(By.xpath("(//div[@class='x-grid3-cell-inner x-grid3-col-firstName']/a)[1]"));
+		String FirstName = Fname.getText();
+		System.out.println(FirstName);
+		System.out.println("Firstname stored successfully");
 
-		// Enter department field
-		driver.findElement(By.id("createLeadForm_departmentName")).sendKeys("QA");
+		// Click First Resulting lead
+		Fname.click();
+		System.out.println("First resulting name is selected");
 
-		// Enter description field
-		driver.findElement(By.id("createLeadForm_description")).sendKeys("I am software tester");
+		// Click Duplicate Lead
+		driver.findElement(By.xpath("//a[text()='Duplicate Lead']")).click();
+		System.out.println("The duplicate lead button is selected");
 
-		// Enter email address
-		driver.findElement(By.id("createLeadForm_primaryEmail")).sendKeys("Annamalai.sagunthala1994@gmail.com");
+		// Verify the title as 'Duplicate Lead'
+		String CurrentTitle = "Duplicate Lead | opentaps CRM";
+		String TitleDup = driver.getTitle();
+		if (CurrentTitle.equals(TitleDup)) {
+			System.out.println("The title is matched");
+		} else {
+			System.out.println("The title not matched");
+		}
 
-		// Select State/Province as NewYork Using Visible Text
-		WebElement Stateprovince = driver.findElement(By.id("createLeadForm_generalStateProvinceGeoId"));
+		// Click Create Lead
+		driver.findElement(By.xpath("//input[@value='Create Lead']")).click();
+		System.out.println("Create lead is clicked successfully");
 
-		// Select class
-		Select dd = new Select(Stateprovince);
-		dd.selectByVisibleText("New York");
+		// Confirm the duplicated lead name is same as captured name
+		Thread.sleep(3000);
+		WebElement CaptureTitle = driver.findElement(By.xpath("//span[@id='viewLead_firstName_sp']"));
+		String NewCaptureTitle = CaptureTitle.getText();
+		System.out.println(NewCaptureTitle);
 
-		// Click on create button
-		driver.findElement(By.className("smallSubmit")).click();
-
-		// Get the current url
-		// Get the title
-		String title = driver.getTitle();
-		System.out.println(title);
+		if (FirstName.equals(NewCaptureTitle)) {
+			System.out.println("Name matched successfully");
+		} else {
+			System.out.println("Name doesnt matched");
+		}
 		
-		//Click on duplicate button
-		driver.findElement(By.linkText("Duplicate Lead")).click();
-		
-		//Clear the firstname and send new first name
-		WebElement Fname = driver.findElement(By.id("createLeadForm_firstName"));
-		Fname.clear();
-		Fname.sendKeys("AnnamalaiNarayanan");
-		
-		//Clear the company name and send new company name
-		WebElement Company = driver.findElement(By.id("createLeadForm_companyName"));
-		Company.clear();
-		Company.sendKeys("Expleo");
-		
-		//Click on create lead button
-		driver.findElement(By.className("smallSubmit")).click();
-
-		
-		// Get the title of the resulting page
-		String title2 = driver.getTitle();
-		System.out.println(title2);
+		//Close the browser
+		driver.close();
 
 	}
 }
