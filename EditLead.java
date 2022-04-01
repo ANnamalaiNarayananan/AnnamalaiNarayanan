@@ -79,7 +79,7 @@ public class EditLead {
 		CompanyName.clear();
 		System.out.println("THe company name is cleared");
 		
-		String ComName="Mphasis";
+		String ComName="System";
 		CompanyName.sendKeys(ComName);
 		System.out.println("The company name changed");
 		
